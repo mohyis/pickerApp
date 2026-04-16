@@ -2,8 +2,7 @@ const pickerModel = require('../models/pickerModel');
 const bcrypt = require('bcrypt');
 const sendMail = require('../utils/nodemailer');
 const otpGenerator = require('otp-generator')
-
-const {emailTemplate} = require('../html/emailTemplate')
+const {emailTemplate} = require('../utils/emailTemplate')
 const jwt = require('jsonwebtoken')
 
 

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
-const pickerSchema = new mongoose.Schema({
-     name: {
+const restaurantSchema = new mongoose.Schema({
+     orderName: {
         type: String,
         required: true
     },
@@ -34,11 +34,10 @@ const pickerSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        ENUM: ['user','admin'],
-        default: 'user'
+        defaultValue: 'restaurant'
     }
 }, {timestamps: true})
 
-const pickerModel = mongoose.model('picker', pickerSchema)
+const restaurantModel = mongoose.model('restaurant', restaurantSchema)
 
-module.exports = pickerModel
+module.exports = restaurantModel
