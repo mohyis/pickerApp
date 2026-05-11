@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const multer = require('multer')
-const upload = multer({dest: '/upload'})
+// const multer = require('multer')
+// const upload = multer({dest: '/upload'})
 const { verifyLogin, checkAdmin } = require('../middleware/validation')
 
 const { signUpRestaurant, getRestaurant, getAllRestaurant, updateRestaurant, deleteRestaurant, resendRestaurantOTP, verifyRestaurantEmail, loginRestaurant, createCategory, deleteMenu, menuProduct, getAllMenu } = require('../controller/restaurantController');
