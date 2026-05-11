@@ -43,7 +43,7 @@ const swaggerDefinition = {
     },
     servers: [
         {
-            url: 'http://localhost:8899',
+            url: 'https://pickerapp.onrender.com/',
             description: 'development server',
         },
     ],
