@@ -14,7 +14,7 @@ router.post('/resend', resendRestaurantOTP)
 router.post('/verify', verifyRestaurantEmail)
 router.post('/login', loginRestaurant)
 
-router.post('/menu', verifyLogin, upload.single('image'), menuProduct)
+// router.post('/menu', verifyLogin, upload.single('image'), menuProduct)
 router.post('/category', createCategory)
 router.get('/menus', verifyLogin, getAllMenu)
 router.delete('/menu/:id', checkAdmin, deleteMenu)
