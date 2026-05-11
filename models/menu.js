@@ -17,8 +17,12 @@ const menuSchema = new mongoose.Schema({
         type: Number,
         require: true
     },
-    categoryId: {
-        type: mongoose.Schema.Types.ObjectId,
+    // categoryId: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     require: true
+    // },
+    category: {
+        type: String,
         require: true
     },
     isAvailable: {

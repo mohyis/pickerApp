@@ -25,8 +25,9 @@ exports.signUpRestaurant = async(req,res)=>{
 
         const emailExists = await restaurantModel.findOne({ email: email})
         if (emailExists){
-            return res.status(400).json({
-                message: `${email} already exists`
+            return next({
+                message: `${email} already exists`,
+                statusCode: 400
             })
         }
 
@@ -63,9 +64,10 @@ exports.signUpRestaurant = async(req,res)=>{
 
         
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+        next({
+        message: error.message, 
+        statusCode: 500
+      })
     }
 };
 
@@ -77,13 +79,15 @@ exports.verifyRestaurantEmail = async(req,res)=>{
         const restaurant = await restaurantModel.findOne({email})
 
         if(!restaurant){
-            return res.status(404).json({
-                message: 'restaurant not found'
+            return next({
+                message: 'restaurant not found',
+                statusCode: 404
             })
         };
         if (new Date()> restaurant.otpExpiresAt || restaurant.otp != otp){
-            return res.status(400).json({
-                message: 'Invalid OTP'
+            return next({
+                message: 'Invalid OTP',
+                statusCode: 400
             })
 
         }
@@ -100,9 +104,10 @@ exports.verifyRestaurantEmail = async(req,res)=>{
 
 
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+        next({
+        message: error.message, 
+        statusCode: 500
+      })
     }
 };
 
@@ -111,8 +116,9 @@ exports.resendRestaurantOTP = async(req,res)=>{
     const restaurant = await restaurantModel.findOne({email})
 
         if(!restaurant){
-            return res.status(404).json({
-                message: 'restaurant not found'
+            return next({
+                message: 'restaurant not found',
+                statusCode: 404
             })
         };
 
@@ -143,22 +149,25 @@ exports.loginRestaurant = async(req,res)=>{
         const {phoneNumber, password} = req.body
         const restaurant  = await restaurantModel.findOne({phoneNumber})
         if(!restaurant){
-            return res.status(404).json({
-                message: 'restaurant not found'
+            return next({
+                message: 'restaurant not found',
+                statusCode: 404
             })
         };
 
         if(restaurant.isVerified == false){
-            return res.status(404).json({
-                message: 'please verify your email'
+            return next({
+                message: 'please verify your email',
+                statusCode: 404
             })
 
         }
 
         const passwordCorrect = await bcrypt.compare(password, restaurant.password)
         if(!passwordCorrect){
-            return res.status(400).json({
-                message: 'Invalid credentials'
+            return next({
+                message: 'Invalid credentials',
+                statusCode: 400
             })
         }   
 
@@ -174,9 +183,10 @@ exports.loginRestaurant = async(req,res)=>{
 
 
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+       next({
+        message: error.message, 
+        statusCode: 500
+      })
     }
 }
 
@@ -190,9 +200,10 @@ exports.getAllRestaurant = async(req,res)=>{
             allrestaurants
         })
     } catch (error) {
-        res.status(500).json({
-            message: error.messsage
-        })
+        next({
+        message: error.message, 
+        statusCode: 500
+      })
     }
 };
 
@@ -203,8 +214,9 @@ exports.getRestaurant = async(req,res)=>{
         const restaurant = await restaurantModel.findById(id)
 
         if(!restaurant){
-            return res.status(404).json({
-                message: 'restaurant not found'
+            return next({
+                message: 'restaurant not found',
+                statusCode: 404
             })
         }
 
@@ -214,9 +226,10 @@ exports.getRestaurant = async(req,res)=>{
 
         })
     } catch (error) {
-        res.status(500).json({
-            message: error.messsage
-        })
+        next({
+        message: error.message, 
+        statusCode: 500
+      })
     }
 };
 
@@ -235,8 +248,9 @@ exports.updateRestaurant = async(req,res)=>{
         const restaurant = await restaurantModel.findByIdAndUpdate(id, update, {new: true})
 
         if(!restaurant){
-            return res.status(404).json({
-                message: 'restaurant not found'
+            return next({
+                message: 'restaurant not found',
+                statusCode: 404
             })
         }
 
@@ -247,9 +261,10 @@ exports.updateRestaurant = async(req,res)=>{
             })
         
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+        next({
+        message: error.message, 
+        statusCode: 500
+      })
     }
 };
 
@@ -260,8 +275,9 @@ exports.deleteRestaurant = async(req, res)=>{
         const restaurant = await restaurantModel.findByIdAndDelete(id)
 
         if(!restaurant){
-            return res.status(404).json({
-                message: 'restaurant not found'
+            return next({
+                message: 'restaurant not found',
+                statusCode: 404
             })
         }
 
@@ -270,16 +286,66 @@ exports.deleteRestaurant = async(req, res)=>{
 
         })
     } catch (error) {
-         res.status(500).json({
-            message: error.message
-        })
+         next({
+        message: error.message, 
+        statusCode: 500
+      })
     }
 };
+
+// exports.menuProduct = async(req,res)=>{
+//     try {
+//         const {id} = req.user
+//         const { categoryId, menuName, menuDescription, amount } = req.body
+//         cloudinary.config({
+//             cloud_name: process.env.API_CLOUDNAME,
+//             api_secret: process.env.API_SECRET,
+//             api_key: process.env.API_KEY
+//         })
+
+//         console.log(req.file);
+        
+//         const uploadCloud = await cloudinary.uploader.upload(req.file.path)
+//         if(!req.file.path){
+//             return next({
+//                 message: 'file not found',
+                    // statusCode: 404
+//             })
+//         }
+
+       
+//         const product = menuModel({
+//             restaurantId: id,
+//             categoryId, 
+//             menuName, 
+//             menuDescription, 
+//             amount,
+//             menuImage: uploadCloud.secure_url
+           
+//         })
+
+//         await product.save()
+
+//         console.log(product)
+
+//         res.status(201).json({
+//             message: 'menu created successfully',
+//             product
+//         })
+
+
+//     } catch (error) {
+//         next({
+    //     message: error.message, 
+    //     statusCode: 500
+    //   })
+//     }
+// };
 
 exports.menuProduct = async(req,res)=>{
     try {
         const {id} = req.user
-        const { categoryId, menuName, menuDescription, amount } = req.body
+        const { category, menuName, menuDescription, amount } = req.body
         cloudinary.config({
             cloud_name: process.env.API_CLOUDNAME,
             api_secret: process.env.API_SECRET,
@@ -290,15 +356,16 @@ exports.menuProduct = async(req,res)=>{
         
         const uploadCloud = await cloudinary.uploader.upload(req.file.path)
         if(!req.file.path){
-            return res.status(404).json({
-                message: 'file not found'
+            return next({
+                message: 'file not found',
+                statusCode: 404
             })
         }
 
        
         const product = menuModel({
             restaurantId: id,
-            categoryId, 
+            category, 
             menuName, 
             menuDescription, 
             amount,
@@ -308,8 +375,6 @@ exports.menuProduct = async(req,res)=>{
 
         await product.save()
 
-        console.log(product)
-
         res.status(201).json({
             message: 'menu created successfully',
             product
@@ -317,9 +382,10 @@ exports.menuProduct = async(req,res)=>{
 
 
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+        next({
+        message: error.message, 
+        statusCode: 500
+      })
     }
 };
 
@@ -337,11 +403,47 @@ exports.createCategory = async(req, res)=>{
         })
         
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+        next({
+        message: error.message, 
+        statusCode: 500
+      })
     }
 };
+
+exports.getAllMenu = async(req, res)=>{
+try {
+    const {id} = req.user;
+    const restaurant = await restaurantModel.findById(id);
+
+    if(!restaurant){
+        return next({
+            message: 'restaurant not found',
+            statusCode: 404
+        })
+    };
+
+    const menus = await menuModel.find({
+        restaurantId: restaurant._id
+    });
+
+    const categories = [...new Set(menus.map(e => e.category))];
+
+    res.status(200).json({
+        message: 'all menus',
+        menus,
+        categories
+    })
+
+} catch (error) {
+    next({
+        message: error.message, 
+        statusCode: 500
+      })
+}
+
+};
+
+
 
 exports.deleteMenu = async(req, res)=>{
     try {
@@ -350,8 +452,9 @@ exports.deleteMenu = async(req, res)=>{
 
         const menu = await menuModel.findByIdAndDelete(id)
         if(!menu){
-            return res.status(404).json({
-                message: 'menu not found'
+            return next({
+                message: 'menu not found',
+                statusCode: 404
             })
         }
 
@@ -361,8 +464,9 @@ exports.deleteMenu = async(req, res)=>{
 
 
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+        next({
+        message: error.message, 
+        statusCode: 500
+      })
     }
 }

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const pickerSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
      name: {
         type: String,
         required: true
@@ -39,6 +39,6 @@ const pickerSchema = new mongoose.Schema({
     }
 }, {timestamps: true})
 
-const pickerModel = mongoose.model('picker', pickerSchema)
+const userModel = mongoose.model('user', userSchema)
 
-module.exports = pickerModel
+module.exports = userModel

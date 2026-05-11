@@ -1,5 +1,5 @@
 const FacebookStrategy = require('passport-facebook').Strategy;
-const User = require('../models/pickerModel')
+const User = require('../models/user')
 const passport = require('passport')
 const jwt = require('jsonwebtoken')
 

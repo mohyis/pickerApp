@@ -1,6 +1,6 @@
 const GitHubStrategy = require('passport-github').Strategy;
 const passport = require('passport')
-const User = require('../models/pickerModel')
+const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
 passport.use(new GitHubStrategy({
@@ -9,8 +9,8 @@ passport.use(new GitHubStrategy({
     callbackURL: process.env.ghCallbackURL
   },
   async function(request, accessToken, refreshToken, profile, done) {
-    console.log(profile)
-    const checkUser = await User.findOne({ username: profile.username });
+    // console.log(profile)
+    const checkUser = await User.findOne({ name: profile.username });
     let token;
     if(checkUser){
         token = await jwt.sign({id:checkUser._id}, process.env.JWT_SECRET, {expiresIn: "1day"})

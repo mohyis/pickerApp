@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const restaurantSchema = new mongoose.Schema({
-     orderName: {
+     name: {
         type: String,
         required: true
     },
@@ -34,7 +34,7 @@ const restaurantSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        defaultValue: 'restaurant'
+        default: 'restaurant'
     }
 }, {timestamps: true})
 
