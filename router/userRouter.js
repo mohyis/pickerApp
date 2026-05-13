@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const passport = require('passport')
 const { signUp, getUser, getAllUser, updateUser, deleteUser, resendOTP, verifyEmail, login } = require('../controller/userController');
+const rateLimiter = require('../middleware/rateLimiter');
 
 /**
  * @swagger
@@ -237,7 +238,7 @@ router.post('/verify', verifyEmail)
  *                   description: a success message
  *                   example: user login successfully
  */
-router.post('/login', login)
+router.post('/login', rateLimiter ,login)
 router.get('/googleAuth', passport.authenticate("google", {scope: ["profile", "email"]}))
 router.get('/googleLogin', passport.authenticate('google',{successRedirect: "/api/user/loginSuccess", failureRedirect: "/api/user/loginFail"}))
 

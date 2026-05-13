@@ -36,6 +36,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         ENUM: ['user','admin'],
         default: 'user'
+    },
+    loginAttempts: {
+        type: Number,
+        default: 0
+    },
+    lockUntil: {
+        type: Date
     }
 }, {timestamps: true})
 

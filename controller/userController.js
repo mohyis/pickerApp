@@ -159,13 +159,36 @@ exports.login = async(req,res, next)=>{
 
         }
 
+        // check if account is locked due to many failed login attempts
+
+        if( user.lockUntil > Date.now()) {
+            return next({
+                message: `Account locked until ${user.lockUntil}`,
+                statusCode: 403
+            })
+        }
+
         const passwordCorrect = await bcrypt.compare(password, user.password)
         if(!passwordCorrect){
+            // increment login attempt and lock account if necessary
+
+            user.loginAttempts += 1;
+            if (user.loginAttempts >=5) {
+                user.lockUntil = new Date(Date.now() + 2 * 60000);
+                user.loginAttempts = 0
+            }
+
+            await user.save()
+            
             return next({
         message: 'invalid credentials', 
         statusCode: 400
       })
         }   
+
+        // reset login attempts on successful login
+        user.loginAttempts = 0;
+        await user.save();
 
         const token = await jwt.sign({ 
             id: user._id, email: user.email}, 

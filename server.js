@@ -14,10 +14,13 @@ const restaurantRouter = require('./router/restaurantRouter')
 const orderRouter = require('./router/orderRouter')
 const locationRouter = require('./router/locationRouter')
 const weatherRouter = require('./router/weatherRouter')
+const rateLimiter = require('./middleware/rateLimiter');
+
 
 app.use(expressSession({secret: "mohyis", saveUninitialized: false, resave: false}))
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(rateLimiter)
 app.use('/api/location', locationRouter)
 app.use("/api/v1/user", userRouter)
 app.use("/api/restaurant", restaurantRouter)
@@ -102,7 +105,7 @@ app.use((error, req, res , next)=>{
 })
 
 
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 mongoose.connect(process.env.DB_URI).then(()=>{
     console.log('database connected successfully'), app.listen(PORT, ()=>{
