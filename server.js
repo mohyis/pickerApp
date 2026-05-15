@@ -1,11 +1,24 @@
 const express = require('express')
 require('dotenv').config()
+const PORT = 8899
 const passport = require('passport')
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc')
 const expressSession = require('express-session')
-const app = express()
-const PORT = 8899
+const cors = require('cors');
+const app = express();
+
+// Allow cors for all origins
+// app.use(cors({origin: '*'}))
+
+// Allow cors for specific origins - localhost
+// app.use(cors({origin: 'http://localhost:3000'}));
+// Allow cors for specific origins - localhost and hosted
+// app.use(cors({origin: ['http://localhost:3000', 'https://pickerapp.onrender.com']}));
+
+const allowedOrigins = ['http://localhost:3000', 'https://pickerapp.onrender.com'];
+app.use(cors({origin: allowedOrigins}));
+
 
 app.use(express.json())
 
@@ -15,6 +28,7 @@ const orderRouter = require('./router/orderRouter')
 const locationRouter = require('./router/locationRouter')
 const weatherRouter = require('./router/weatherRouter')
 const rateLimiter = require('./middleware/rateLimiter');
+
 
 
 app.use(expressSession({secret: "mohyis", saveUninitialized: false, resave: false}))
