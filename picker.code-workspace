@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"name": "picker",
+			"path": "."
+		},
+		{
+			"name": "EventHub",
+			"path": "../EventHub"
+		},
+		{
+			"name": "mongo",
+			"path": "../mongo"
+		},
+		{
+			"name": "taskManagerPro",
+			"path": "../taskManagerPro"
+		},
+		{
+			"path": "../ed_tech"
+		}
+	]
+}

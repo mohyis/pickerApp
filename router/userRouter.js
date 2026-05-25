@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const passport = require('passport')
-const { signUp, getUser, getAllUser, updateUser, deleteUser, resendOTP, verifyEmail, login } = require('../controller/userController');
+const { signUp, getUser, getAllUser, updateUser, deleteUser, resendOTP, verifyEmail, login, logout } = require('../controller/userController');
 const rateLimiter = require('../middleware/rateLimiter');
 
 /**
@@ -287,6 +287,6 @@ router.get('/ghLoginFail', (req, res)=>{
     })
 })
 
-
+router.post('/logout', logout)
 
 module.exports = router

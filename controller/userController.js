@@ -4,6 +4,8 @@ const sendMail = require('../utils/nodemailer');
 const otpGenerator = require('otp-generator')
 const {emailTemplate} = require('../utils/emailTemplate')
 const jwt = require('jsonwebtoken')
+const {sendBrevoEmail} = require('../utils/brevo')
+const redisClient = require('../redisConfig/redis')
 
 
 
@@ -44,7 +46,8 @@ exports.signUp = async(req,res,next)=>{
             html: emailTemplate(signup.name, OTP)
         }
 
-        await sendMail(emailOptions);
+        // await sendMail(emailOptions);
+        await sendBrevoEmail(emailOptions)
 
         const data = {
             name: signup.name,
@@ -130,7 +133,9 @@ exports.resendOTP = async(req,res,next)=>{
             html: emailTemplate(user.name, OTP)
         }
 
-        await sendMail(emailOptions)
+        // await sendMail(emailOptions);
+
+        await sendBrevoEmail(emailOptions)
 
         await user.save()
 
@@ -194,6 +199,8 @@ exports.login = async(req,res, next)=>{
             id: user._id, email: user.email}, 
             process.env.JWT_SECRET, 
             { expiresIn: '1 hour'})
+            redisClient.del(`user: ${user._id}`)
+            redisClient.set(`user: ${user._id}`, token, {EX: 86400})
 
         res.status(200).json({
             message: 'login successfully',
@@ -296,3 +303,18 @@ exports.deleteUser = async(req, res, next)=>{
          next(error)
     }
 };
+
+exports.logout = async(req, res, next)=>{
+    try {
+        // get the token from the request header
+        const {id} = req.user
+        // delete the token from redis to invalidate the session
+        redisClient.del(`user:${id}`)
+
+        res.status(200).json({
+            message: 'logout successful'
+        })
+    } catch (error) {
+        next(error)
+    }
+}
